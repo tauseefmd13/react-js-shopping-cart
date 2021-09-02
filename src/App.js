@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import Home from './components/Home';
+import Shop from './components/Shop';
 import Cart from './components/Cart';
-import Main from './components/Main';
-import Sidebar from './components/Sidebar';
 import Header from './layouts/Header';
 import Footer from './layouts/Footer';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { products } from './data/products.json';
+import Login from './components/Login';
+import Register from './components/Register';
 
 function App() {
-
-  const [state, setState] = useState({
-    selectedSizes: [],
-  });
 
   let initCart;
   if (localStorage.getItem("carts") !== null && localStorage.getItem("carts").length > 0) {
@@ -22,9 +20,17 @@ function App() {
     initCart = [];
   }
 
+  const [state, setState] = useState({
+    selectedSizes: [],
+  });
+
   const [cartState, setCartState] = useState({
     cartItems: initCart,
   });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(9);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     localStorage.setItem("carts", JSON.stringify(cartState.cartItems));
@@ -39,6 +45,12 @@ function App() {
         cartItems: prevState.cartItems.concat({ ...p, quantity:1 }),
       }));
     }
+
+    //Display success message
+    setSuccessMessage("Product added successfully.");
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, [1000]);
   }
 
   const handleIncrementQuantity = (id) => {
@@ -86,6 +98,12 @@ function App() {
     });
   }
 
+  const handleClearCart = () => {
+    setCartState({ 
+      cartItems: [] 
+    });
+  }
+
   const handleClick = (size) => {
     if(state.selectedSizes.includes(size)) {
       setState((prevState) => ({
@@ -98,20 +116,68 @@ function App() {
     }
   }
 
+  // Get current products
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  // Change page
+  const paginate = pageNumber => setCurrentPage(pageNumber);
+
+  //Next page
+  function goToNextPage() {
+    setCurrentPage((page) => page + 1);
+  }
+
+  //Previous page
+  function goToPreviousPage() {
+    setCurrentPage((page) => page - 1);
+  }
+
   return (
     <>
       <BrowserRouter>
         <Header cartItems={cartState.cartItems} />
         <Switch>
           <Route exact path="/">
-            <div className="wrap">
-              <Sidebar products={products} selectedSizes={state.selectedSizes} handleClick={handleClick} />
-              <Main products={products} selectedSizes={state.selectedSizes} handleAddToCart={handleAddToCart} />
-            </div>
+            <Home />
           </Route>
+
+          <Route path="/shop">
+            <Shop 
+              products={products} 
+              selectedSizes={state.selectedSizes} 
+              handleClick={handleClick}
+              currentProducts={currentProducts}  
+              handleAddToCart={handleAddToCart} 
+              productsPerPage={productsPerPage}
+              totalProducts={products.length}
+              paginate={paginate}
+              goToNextPage={goToNextPage}
+              goToPreviousPage={goToPreviousPage}
+              currentPage={currentPage}
+              successMessage={successMessage}
+            />
+          </Route>
+
+          <Route exact path="/login">
+            <Login />
+          </Route>
+
+          <Route exact path="/register">
+            <Register />
+          </Route>
+
           <Route path="/cart">
-            <Cart cartItems={cartState.cartItems} handleIncrementQuantity={handleIncrementQuantity} handleDecrementQuantity={handleDecrementQuantity} handleRemoveCartItem={handleRemoveCartItem} />
+            <Cart 
+              cartItems={cartState.cartItems} 
+              handleIncrementQuantity={handleIncrementQuantity} 
+              handleDecrementQuantity={handleDecrementQuantity} 
+              handleRemoveCartItem={handleRemoveCartItem} 
+              handleClearCart={handleClearCart}
+            />
           </Route>
+          
         </Switch>
         <Footer />
       </BrowserRouter>

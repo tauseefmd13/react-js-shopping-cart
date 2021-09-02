@@ -257,3 +257,7 @@ h5 {
 .size-active p {
   color: #999;
 }
+
+.invalid-feedback {
+  display: block !important;
+}

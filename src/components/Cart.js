@@ -20,7 +20,8 @@ const Cart = (props) => {
                         (
                             <>
                                 <div className="col-12 my-4 text-center">
-                                    <h3 className="mb-4">Your cart is empty.</h3>
+                                    <h2>Cart</h2>
+                                    <p>Your cart is empty.</p>
                                     <Link to="/" className="btn btn-block btn-dark">Back to home</Link>
                                 </div>
                             </>
@@ -88,6 +89,8 @@ const Cart = (props) => {
                                         </div>
                                         <div className="col-sm-12 col-md-6">
                                             <button onClick={() => alert(`Total amount is : $${totalAmount.toFixed(2)}`) } className="btn btn-block btn-primary" style={{ float:"right" }}>Checkout</button>
+
+                                            <button onClick={props.handleClearCart} className="btn btn-block btn-danger" style={{ float:"right", marginRight:"5px" }}>Clear Cart</button>
                                         </div>
                                     </div>
                                 </div>
