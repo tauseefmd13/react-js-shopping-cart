@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-//import { setUserSession } from './../utils/Common';
+import { setUserSession } from './../utils/Common';
 
 const Register = (props) => {
+    const history = useHistory();
 
     const initialValues = {
         name: "",
@@ -50,13 +52,14 @@ const Register = (props) => {
             'Content-Type': 'application/json'
         };
 
-        axios.post("http://localhost:8000/api/v1/register", data, headers
+        axios.post("http://localhost:8000/api/v1/register", data, {headers: headers}
         ).then((response) => {
             console.log('Success',response);
             setLoading(false);
             setState(initialValues);
-            //setUserSession(response.data.data.token, response.data.data.user);
-            //props.history.push('/');
+            setUserSession(response.data.data.token, response.data.data.user);
+            props.setIsLoggedin(true);
+            history.push('/');
         }).catch((error) => {
             console.log('Error',error.response.data);
             setLoading(false);

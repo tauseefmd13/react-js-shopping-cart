@@ -22,12 +22,3 @@ export const removeUserSession = () => {
     sessionStorage.removeItem('user');
 }
 
-// return the auth header from the session storage
-export const authHeader = () => {
-    const token = sessionStorage.getItem('token') || null;
-    return {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-    };
-}

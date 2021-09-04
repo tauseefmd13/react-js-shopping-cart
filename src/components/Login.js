@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
-//import { setUserSession } from './../utils/Common';
+import { setUserSession } from './../utils/Common';
 
 const Login = (props) => {
+    const history = useHistory();
 
     const initialValues = {
         email: "",
@@ -44,13 +46,14 @@ const Login = (props) => {
             'Content-Type': 'application/json'
         };
 
-        axios.post("http://localhost:8000/api/v1/login", data, headers
+        axios.post("http://localhost:8000/api/v1/login", data, {headers: headers}
         ).then((response) => {
             console.log('Success',response);
             setLoading(false);
             setState(initialValues);
-            //setUserSession(response.data.data.token, response.data.data.user);
-            //props.history.push('/');
+            setUserSession(response.data.data.token, response.data.data.user);
+            props.setIsLoggedin(true);
+            history.push('/');
         }).catch((error) => {
             console.log('Error',error.response.data);
             setLoading(false);
@@ -106,12 +109,21 @@ const Login = (props) => {
                                     <strong>{ passwordError }</strong>
                                 </span>}
                             </div>
-                            <div className="col-12">
+                            <div className="col-8">
                                 <div className="form-check">
-                                    <input className="form-check-input" type="checkbox" name="remember" />
+                                    <input 
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        name="remember"
+                                    />
                                     <label className="form-check-label" htmlFor="remember">
                                         Remember me
                                     </label>
+                                </div>
+                            </div>
+                            <div className="col-4">
+                                <div className="form-check">
+                                    <Link to="/forgot-password">Forgot Password?</Link>
                                 </div>
                             </div>
                             <div className="col-12">

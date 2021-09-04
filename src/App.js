@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
+import { products } from './data/products.json';
 import Home from './components/Home';
 import Shop from './components/Shop';
 import Cart from './components/Cart';
 import Header from './layouts/Header';
 import Footer from './layouts/Footer';
-import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { products } from './data/products.json';
 import Login from './components/Login';
 import Register from './components/Register';
+import ForgotPassword from './components/ForgotPassword';
+// import PrivateRoute from './utils/PrivateRoute';
+import PublicRoute from './utils/PublicRoute';
+import { getToken } from './utils/Common';
 
 function App() {
+
+  const [isLoggedin, setIsLoggedin] = useState(getToken() ? true : false);
 
   let initCart;
   if (localStorage.getItem("carts") !== null && localStorage.getItem("carts").length > 0) {
@@ -137,7 +143,11 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Header cartItems={cartState.cartItems} />
+        <Header
+          cartItems={cartState.cartItems}
+          isLoggedin={isLoggedin}
+          setIsLoggedin={setIsLoggedin}
+        />
         <Switch>
           <Route exact path="/">
             <Home />
@@ -160,13 +170,20 @@ function App() {
             />
           </Route>
 
-          <Route exact path="/login">
-            <Login />
-          </Route>
+          <PublicRoute
+            path="/login"
+            component={() => <Login setIsLoggedin={setIsLoggedin} />}
+          />
 
-          <Route exact path="/register">
-            <Register />
-          </Route>
+          <PublicRoute
+            path="/register"
+            component={() => <Register setIsLoggedin={setIsLoggedin} />}
+          />
+
+          <PublicRoute
+            path="/forgot-password"
+            component={() => <ForgotPassword />}
+          />
 
           <Route path="/cart">
             <Cart 
