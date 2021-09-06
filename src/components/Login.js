@@ -9,6 +9,7 @@ const Login = (props) => {
     const initialValues = {
         email: "",
         password: "",
+        remember: false,
     }
 
     const [state, setState] = useState(initialValues);
@@ -18,7 +19,11 @@ const Login = (props) => {
     const [loading, setLoading] = useState(false);
 
     function handleInputChange(e) {
-        const { name, value } = e.target;
+        //const { name, value } = e.target;
+
+        const target = e.target;
+        const name = target.name;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
         
         setState({
             ...state,
@@ -37,6 +42,7 @@ const Login = (props) => {
         const data = { 
             email: state.email,
             password: state.password,
+            remember: state.remember,
             device_name: "other",
             device_token: "1234",
         };
@@ -115,6 +121,8 @@ const Login = (props) => {
                                         className="form-check-input"
                                         type="checkbox"
                                         name="remember"
+                                        checked={state.remember}
+                                        onChange={handleInputChange}
                                     />
                                     <label className="form-check-label" htmlFor="remember">
                                         Remember me

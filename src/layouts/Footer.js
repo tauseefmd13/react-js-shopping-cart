@@ -3,9 +3,9 @@ import React from 'react';
 const Footer = () => {
     return (
         <>
-            <footer className="bg-white text-dark py-3">
+            <footer className="text-dark py-3">
                 <p className="text-center">
-                    Copyright &copy; 2021. All rights reserved.
+                    Copyright &copy; {new Date().getFullYear()}. All rights reserved.
                 </p>
             </footer>
         </>

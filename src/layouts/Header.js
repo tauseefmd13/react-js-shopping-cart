@@ -53,7 +53,7 @@ const Header = (props) => {
                                 (
                                     <>
                                         <li className="nav-item">
-                                            <Link className="nav-link" onClick={handleLogout}>Logout</Link>
+                                            <button style={{ border:"none", backgroundColor:"#fff" }} className="nav-link" onClick={handleLogout}>Logout</button>
                                         </li>
                                     </>
                                 )
