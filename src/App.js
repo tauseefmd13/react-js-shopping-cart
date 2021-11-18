@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.js';
 import './App.css';
 import { products } from './data/products.json';
 import Home from './components/Home';
@@ -11,9 +12,13 @@ import Footer from './layouts/Footer';
 import Login from './components/Login';
 import Register from './components/Register';
 import ForgotPassword from './components/ForgotPassword';
-// import PrivateRoute from './utils/PrivateRoute';
+import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
 import { getToken } from './utils/Common';
+
+import axios from 'axios';
+import Users from './components/Users';
+axios.defaults.baseURL = "http://localhost:8000";
 
 function App() {
 
@@ -152,6 +157,11 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
+
+          <PrivateRoute
+            path="/users"
+            component={() => <Users />}
+          />
 
           <Route path="/shop">
             <Shop 
